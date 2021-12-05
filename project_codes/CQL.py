@@ -7,11 +7,9 @@ from d3rlpy.datasets import get_pybullet
 from d3rlpy.metrics.scorer import evaluate_on_environment
 from d3rlpy.metrics.scorer import td_error_scorer
 from d3rlpy.metrics.scorer import discounted_sum_of_advantage_scorer
-from d3rlpy.metrics.scorer import average_value_estimation_scorer
-from d3rlpy.metrics.scorer import continuous_action_diff_scorer
-from d3rlpy.metrics.scorer import value_estimation_std_scorer
-from d3rlpy.gpu import Device
+from d3rlpy.metrics.scorer import initial_state_value_estimation_scorer
 from sklearn.model_selection import train_test_split
+from d3rlpy.gpu import Device
 
 
 def main(args):
@@ -27,14 +25,12 @@ def main(args):
 
     cql.fit(train_episodes,
             eval_episodes=test_episodes,
-            n_epochs=100,
+            n_epochs=1000,
             scorers={
-                'environment': evaluate_on_environment(env),
+                'average_reward': evaluate_on_environment(env),
                 'td_error': td_error_scorer,
                 'discounted_advantage': discounted_sum_of_advantage_scorer,
-                'value_scale': average_value_estimation_scorer,
-                'value_std': value_estimation_std_scorer,
-                'action_diff': continuous_action_diff_scorer
+                'Q_estimate': initial_state_value_estimation_scorer,
             })
 
 

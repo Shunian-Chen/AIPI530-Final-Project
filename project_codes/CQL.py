@@ -10,6 +10,7 @@ from d3rlpy.metrics.scorer import discounted_sum_of_advantage_scorer
 from d3rlpy.metrics.scorer import initial_state_value_estimation_scorer
 from sklearn.model_selection import train_test_split
 from d3rlpy.gpu import Device
+from d3rlpy.preprocessing import scalers
 
 
 def main(args):
@@ -21,11 +22,11 @@ def main(args):
 
     device = None if args.gpu is None else Device(args.gpu)
 
-    cql = CQL(q_func_factory=args.q_func, use_gpu=device)
+    cql = CQL(q_func_factory=args.q_func, use_gpu=device, scaler = "standard", action_scaler='min_max')
 
     cql.fit(train_episodes,
             eval_episodes=test_episodes,
-            n_epochs=1000,
+            n_epochs=100,
             scorers={
                 'average_reward': evaluate_on_environment(env),
                 'td_error': td_error_scorer,

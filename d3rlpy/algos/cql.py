@@ -21,7 +21,6 @@ from .base import AlgoBase
 from .dqn import DoubleDQN
 from .torch.cql_impl import CQLImpl, DiscreteCQLImpl
 
-
 class CQL(AlgoBase):
     r"""Conservative Q-Learning algorithm.
 

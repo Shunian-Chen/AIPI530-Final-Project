@@ -85,12 +85,12 @@ class D3RLPyLogger:
 
         self._params = None
 
-    def add_params(self, params: Dict[str, Any]) -> None:
+    def add_params(self, params: Dict[str, Any], path = None) -> None:
         assert self._params is None, "add_params can be called only once."
 
         if self._save_metrics:
             # save dictionary as json file
-            params_path = os.path.join(self._logdir, "params.json")
+            params_path = os.path.join(self._logdir, "params.json") if path == None else path
             with open(params_path, "w") as f:
                 json_str = json.dumps(
                     params, default=default_json_encoder, indent=2

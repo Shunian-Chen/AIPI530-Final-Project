@@ -8,6 +8,7 @@ from d3rlpy.metrics.scorer import evaluate_on_environment
 from d3rlpy.metrics.scorer import td_error_scorer
 from d3rlpy.metrics.scorer import discounted_sum_of_advantage_scorer
 from d3rlpy.metrics.scorer import initial_state_value_estimation_scorer
+from d3rlpy.metrics.scorer import true_q_value_scorer
 from sklearn.model_selection import train_test_split
 from d3rlpy.gpu import Device
 from d3rlpy.models.optimizers import AdamFactory
@@ -30,17 +31,23 @@ def main(args):
                 action_scaler='min_max',
                 optim_factory=optim_factory)
 
+    save_path = os.path.curdir if args.save_path == None else args.save_path
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+
+    para_path = os.path.join(save_path, "params.json")
     cql.fit(train_episodes,
             eval_episodes=test_episodes,
-            n_epochs=1000,
+            n_epochs=100,
             scorers={
                 'average_reward': evaluate_on_environment(env),
                 'Q_estimate': initial_state_value_estimation_scorer,
-            })
+                "True_Q": true_q_value_scorer
+            },
+            path = para_path)
 
 
-    save_path = os.path.curdir if args.save_path == None else args.save_path
-    os.makedirs(save_path)
+    
     save_path = os.path.join(save_path, "model.pt")
     cql.save_model(save_path)
 

@@ -54,7 +54,6 @@ from .preprocessing import (
     create_scaler,
 )
 
-
 class ImplBase(metaclass=ABCMeta):
     @abstractmethod
     def save_model(self, fname: str) -> None:
@@ -366,6 +365,7 @@ class LearnableBase:
         ] = None,
         shuffle: bool = True,
         callback: Optional[Callable[["LearnableBase", int, int], None]] = None,
+        path = None
     ) -> List[Tuple[int, Dict[str, float]]]:
         """Trains with the given dataset.
 
@@ -421,6 +421,7 @@ class LearnableBase:
                 scorers,
                 shuffle,
                 callback,
+                path = path
             )
         )
         return results
@@ -445,6 +446,7 @@ class LearnableBase:
         ] = None,
         shuffle: bool = True,
         callback: Optional[Callable[["LearnableBase", int, int], None]] = None,
+        path = None,
     ) -> Generator[Tuple[int, Dict[str, float]], None, None]:
         """Iterate over epochs steps to train with the given dataset. At each
              iteration algo methods and properties can be changed or queried.
@@ -590,7 +592,7 @@ class LearnableBase:
             LOG.warning("Skip building models since they're already built.")
 
         # save hyperparameters
-        self.save_params(logger)
+        self.save_params(logger, path)
 
         # refresh evaluation metrics
         self._eval_results = defaultdict(list)
@@ -807,7 +809,7 @@ class LearnableBase:
             if test_score is not None:
                 self._eval_results[name].append(test_score)
 
-    def save_params(self, logger: D3RLPyLogger) -> None:
+    def save_params(self, logger: D3RLPyLogger, path = None) -> None:
         """Saves configurations as params.json.
 
         Args:
@@ -834,7 +836,7 @@ class LearnableBase:
         # serialize objects
         params = _serialize_params(params)
 
-        logger.add_params(params)
+        logger.add_params(params, path = path)
 
     def get_action_type(self) -> ActionSpace:
         """Returns action type (continuous or discrete).

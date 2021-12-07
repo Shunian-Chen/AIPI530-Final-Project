@@ -43,7 +43,7 @@ def main(args):
            'init_value': initial_state_value_estimation_scorer,
         },
         with_timestamp=False,
-        experiment_name="FQE_{}".format(model_name))
+        experiment_name="FQE_{}".format(model_name.upper()))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

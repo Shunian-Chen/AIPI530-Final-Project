@@ -17,9 +17,39 @@ This project modifies reinforcement learning repository d3rlpy to perform the fo
   
 -  Compare the performance between SAC, DDPG and CQL
 
+## 2. Codes
 
+In the project_codes files, there are 3 python files and a Jupiter Notebook demo.
 
-## 2. Installation
+### Model
+
+This file build model according to the given parameters, then train and save the model. 
+
+The argument list is shown
+
+- --dataset: a string specifying the offline dataset of desired environment, default using hopper-bullet-mixed-v0
+- --seed: an integer specifying the random seed, default 0
+- --q-func: a string specifying Q function used, default using mean, choices are mean, qr, iqn and fqf
+- --model: a string specifying model to use, default using cql, choices are cql, ddpg, sac
+- --gpu: an integer specifying whether using gpu to accelerate training process
+- --save_path: a string specifying where to save the trained model and the parameters of the model
+- --epoch: an integer specifying number of epochs to be performed, default 100
+
+### OPE
+
+This file load the existing model and evaluate its offline performance using FQE.
+
+The argument list is primarily the same as previous step, except the load_path specifying the path to load the trained model and parameters. In general however, it should be the same as save path before.
+
+### plot
+
+Plot the results. There will be 3 plots for each model, which are average rewards, Q estimate vs True Q, Q estimate for OPE.
+
+### AIPI530_Final_Project
+
+This is a demo shows how the codes are supposed to be used. The demo can be directly run on Google Colab. However, it could also be run on local machine with some minor modification on path.
+
+## 3. Run the code
 
 1. Open cmd and direct to working directory
 
@@ -52,23 +82,52 @@ This project modifies reinforcement learning repository d3rlpy to perform the fo
    python project_codes/Model.py --save_path sp --q-func qf --model model --epoch epoch
    ```
 
-   The argument list is shown
-
-   - --dataset: a string specifying the offline dataset of desired environment, default using hopper-bullet-mixed-v0
-   - --seed: an integer specifying the random seed, default 0
-   - --q-func: a string specifying Q function used, default using mean, choices are mean, qr, iqn and fqf
-   - --model: a string specifying model to use, default using cql, choices are cql, ddpg, sac
-   - --gpu: an integer specifying whether using gpu to accelerate training process
-   - --save_path: a string specifying where to save the trained model and the parameters of the model
-   - --epoch: an integer specifying number of epochs to be performed, default 100
-
 6. Evaluate the trained model
 
    ```shell
-   python "project_codes/OPE.py" --load_path lp --q-func qr --model model --epoch epoch
+   python project_codes/OPE.py --load_path lp --q-func qr --model model --epoch epoch
    ```
 
-   The argument list is primarily the same as previous step, except the load_path specifying the path to load the trained model and parameters. In general however, it should be the same as save path before.
-
 7. Plot the results
+
+   ```shell
+   python project_codes/plot.py --path log_path --model model
+   ```
+
+## 4. Example Results
+
+![CQL](https://s2.loli.net/2021/12/07/uhRWm5U2BNol7sz.png)
+
+![DDPG](https://s2.loli.net/2021/12/07/ZwXndeECSDhNulA.png)
+
+![SAC](https://s2.loli.net/2021/12/07/RsWQNgd8m7LOGnI.png)
+
+## 5. Citation
+
+```
+{authors:
+- family-names: "Seno"
+  given-names: "Takuma"
+title: "d3rlpy: An offline deep reinforcement learning library"
+version: 0.91
+date-released: 2020-08-01
+url: "https://github.com/takuseno/d3rlpy"
+preferred-citation:
+  type: conference-paper
+  authors:
+  - family-names: "Seno"
+    given-names: "Takuma"
+  - family-names: "Imai"
+    given-names: "Michita"
+  journal: "NeurIPS 2021 Offline Reinforcement Learning Workshop"
+  conference:
+    name: "NeurIPS 2021 Offline Reinforcement Learning Workshop"
+  collection-title: "35th Conference on Neural Information Processing Systems, Offline Reinforcement Learning Workshop, 2021"
+  month: 12
+  title: "d3rlpy: An Offline Deep Reinforcement Learning Library"
+  year: 2021
+}
+> https://github.com/takuseno/d3rlpy.git 
+
+```
 
